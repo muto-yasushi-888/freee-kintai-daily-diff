@@ -1,9 +1,12 @@
 // ==UserScript==
 // @name         freee勤怠 - 日次過不足(8h)表示
 // @namespace    local
+// @version      1.0.0
 // @match        https://p.secure.freee.co.jp/*
 // @run-at       document-idle
 // @grant        none
+// @updateURL    https://raw.githubusercontent.com/muto-yasushi-888/freee-kintai-daily-diff/main/freee-kintai-daily-diff.user.js
+// @downloadURL  https://raw.githubusercontent.com/muto-yasushi-888/freee-kintai-daily-diff/main/freee-kintai-daily-diff.user.js
 // ==/UserScript==
 // ====== 設定 ======
 // 1日の所定労働時間（時間単位、小数OK: 例 7.5 = 7時間30分）

@@ -21,8 +21,13 @@ freee勤怠の勤務記録一覧（`work_records`）画面には「労働日数�
 ## インストール
 
 1. [Tampermonkey](https://www.tampermonkey.net/) など、ユーザースクリプトを実行できる拡張機能をブラウザに導入する
-2. `freee-kintai-daily-diff.user.js` の内容をコピーし、新規ユーザースクリプトとして追加する
+2. 以下のリンクを開く（Tampermonkeyがインストール画面を自動表示します）
+
+   https://raw.githubusercontent.com/muto-yasushi-888/freee-kintai-daily-diff/main/freee-kintai-daily-diff.user.js
+
 3. freee勤怠（`https://p.secure.freee.co.jp/*`）の勤務記録一覧画面を開く
+
+スクリプトには `@updateURL` / `@downloadURL` を設定しているため、以降の更新（`@version` を上げてpush）はTampermonkeyが自動で検知し、更新を促してくれます。
 
 ## 設定
 
