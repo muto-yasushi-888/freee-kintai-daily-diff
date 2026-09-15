@@ -1,7 +1,9 @@
 // ==UserScript==
 // @name         freee勤怠 - 日次過不足表示
 // @namespace    local
-// @version      2.0.0
+// @version      2.0.1
+// @description  freee勤怠の勤務記録一覧に、1日あたりの所定労働時間に対する過不足時間を自動表示します
+// @author       muto-yasushi-888
 // @match        https://p.secure.freee.co.jp/*
 // @run-at       document-idle
 // @grant        GM_getValue
