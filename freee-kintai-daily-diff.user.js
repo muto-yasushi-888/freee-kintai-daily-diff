@@ -1,23 +1,44 @@
 // ==UserScript==
-// @name         freee勤怠 - 日次過不足(8h)表示
+// @name         freee勤怠 - 日次過不足表示
 // @namespace    local
-// @version      1.0.0
+// @version      2.0.0
 // @match        https://p.secure.freee.co.jp/*
 // @run-at       document-idle
-// @grant        none
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_registerMenuCommand
 // @updateURL    https://raw.githubusercontent.com/muto-yasushi-888/freee-kintai-daily-diff/main/freee-kintai-daily-diff.user.js
 // @downloadURL  https://raw.githubusercontent.com/muto-yasushi-888/freee-kintai-daily-diff/main/freee-kintai-daily-diff.user.js
 // ==/UserScript==
-// ====== 設定 ======
-// 1日の所定労働時間（時間単位、小数OK: 例 7.5 = 7時間30分）
-const STANDARD_HOURS_PER_DAY = 8;
-// ==================
 
 (function () {
   'use strict';
-  const STANDARD_MIN = Math.round(STANDARD_HOURS_PER_DAY * 60);
-  const LABEL = `日次過不足(${STANDARD_HOURS_PER_DAY}h)`;
+  const SETTING_KEY = 'standardHoursPerDay';
+  const DEFAULT_HOURS = 8;
   const MARKER = 'data-daily-diff';
+
+  const askHours = (current) => {
+    const input = window.prompt(
+      '1日の所定労働時間を入力してください（時間単位、小数OK: 例 7.5 = 7時間30分）',
+      current != null ? String(current) : String(DEFAULT_HOURS)
+    );
+    if (input === null) return current ?? DEFAULT_HOURS;
+    const parsed = parseFloat(input);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      window.alert('入力値が不正なため、デフォルトの8時間を使用します。');
+      return DEFAULT_HOURS;
+    }
+    return parsed;
+  };
+
+  const getStandardHours = () => {
+    let hours = GM_getValue(SETTING_KEY, null);
+    if (hours == null) {
+      hours = askHours(null);
+      GM_setValue(SETTING_KEY, hours);
+    }
+    return hours;
+  };
 
   const isTarget = () => location.hash.includes('work_records');
 
@@ -43,7 +64,11 @@ const STANDARD_HOURS_PER_DAY = 8;
     const total = parseHourMin(totalEl);
     if (!Number.isFinite(days) || total == null) return;
 
-    const diff = total - days * STANDARD_MIN;
+    const standardHours = getStandardHours();
+    const standardMin = Math.round(standardHours * 60);
+    const label = `日次過不足(${standardHours}h)`;
+
+    const diff = total - days * standardMin;
     const abs = Math.abs(diff);
     const hour = Math.floor(abs / 60);
     const min = abs % 60;
@@ -61,10 +86,16 @@ const STANDARD_HOURS_PER_DAY = 8;
     item.setAttribute(MARKER, '1');
     item.dataset.value = String(diff);
     item.innerHTML = `
-      <div class="label">${LABEL}</div>
+      <div class="label">${label}</div>
       <div class="body" data-test="日次過不足" style="color:${color};"><span class="hour-min"><span class="hour-min__hour"><span class="hour-min__value">${sign}${hour}</span><span class="hour-min__unit">時間</span></span><span class="hour-min__min"><span class="hour-min__value">${min}</span><span class="hour-min__unit">分</span></span></span></div>`;
     shortageItem.insertAdjacentElement('afterend', item);
   };
+
+  GM_registerMenuCommand('所定労働時間を変更', () => {
+    const current = GM_getValue(SETTING_KEY, DEFAULT_HOURS);
+    GM_setValue(SETTING_KEY, askHours(current));
+    render();
+  });
 
   const mo = new MutationObserver(() => render());
   mo.observe(document.body, { childList: true, subtree: true });

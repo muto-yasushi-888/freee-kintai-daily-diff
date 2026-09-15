@@ -25,18 +25,15 @@ freee勤怠の勤務記録一覧（`work_records`）画面には「労働日数�
 
    https://raw.githubusercontent.com/muto-yasushi-888/freee-kintai-daily-diff/main/freee-kintai-daily-diff.user.js
 
-3. freee勤怠（`https://p.secure.freee.co.jp/*`）の勤務記録一覧画面を開く
+3. freee勤怠（`https://p.secure.freee.co.jp/*`）の勤務記録一覧画面を開くと、初回のみ1日の所定労働時間を尋ねる入力ダイアログが表示される
 
 スクリプトには `@updateURL` / `@downloadURL` を設定しているため、以降の更新（`@version` を上げてpush）はTampermonkeyが自動で検知し、更新を促してくれます。
 
 ## 設定
 
-スクリプト冒頭の定数で1日の所定労働時間を変更できます。
+初回アクセス時のダイアログで入力した値（時間単位、小数OK: 例 7.5 = 7時間30分）が保存され、以降は自動で使われます。
 
-```js
-// 1日の所定労働時間（時間単位、小数OK: 例 7.5 = 7時間30分）
-const STANDARD_HOURS_PER_DAY = 8;
-```
+変更したい場合は、ブラウザのTampermonkeyアイコン → 本スクリプトのメニューから「所定労働時間を変更」を選択してください（スクリプト本体の編集は不要です）。
 
 ## 免責事項
 
